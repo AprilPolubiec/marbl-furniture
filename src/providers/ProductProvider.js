@@ -17,6 +17,7 @@ class ProductProvider extends Component {
       } else {
         cart[productId] = 1
       }
+      calculateSubTotal(cart)
       this.setState({ cart })
     }
 
@@ -25,6 +26,7 @@ class ProductProvider extends Component {
       if (cart[productId] > 0) {
         cart[productId] -= 1
       }
+      calculateSubTotal(cart)
       this.setState({ cart })
     }
 
@@ -42,10 +44,20 @@ class ProductProvider extends Component {
       this.setState({ cartTimeout })
     }
 
+    const calculateSubTotal = (cart) => {
+      var subtotal = 0
+      Object.entries(cart).forEach(([id, quantity]) => {
+        var price = this.state.products[id].price
+        subtotal += price * quantity
+      })
+      this.setState({ subtotal })
+    }
+
     this.state = {
       products: {},
       loading: true,
       cart: {},
+      subtotal: 0,
       displayCart: false,
       cartTimeout: null,
       increaseQuantity,
