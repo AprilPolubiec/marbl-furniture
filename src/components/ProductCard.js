@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 
-import { storage } from '../firebase'
-
 import { ProductContext } from '../providers/ProductProvider'
 
 export default class ProductCard extends Component {
@@ -15,17 +13,9 @@ export default class ProductCard extends Component {
 
   static contextType = ProductContext
   handleAddToCart = () => {
-    var { updateQuantity } = this.context
-    updateQuantity(this.props.id)
-  }
-
-  componentDidMount() {
-    storage
-      .ref(this.props.product.image)
-      .getDownloadURL()
-      .then((url) => {
-        this.setState({ imageURL: url })
-      })
+    var { increaseQuantity, openCart } = this.context
+    increaseQuantity(this.props.id)
+    openCart()
   }
 
   render() {
@@ -35,7 +25,12 @@ export default class ProductCard extends Component {
         onMouseEnter={() => this.setState({ displayButtons: true })}
         onMouseLeave={() => this.setState({ displayButtons: false })}
       >
-        <img alt={this.props.product.name} src={this.state.imageURL}></img>
+        <div className='image'>
+          <img
+            alt={this.props.product.name}
+            src={this.props.product.image}
+          ></img>
+        </div>
         <div className='title'>{this.props.product.name}</div>
         <div className='price'>${this.props.product.price}</div>
         {this.state.displayButtons ? (
