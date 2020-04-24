@@ -14,11 +14,11 @@ export default class Home extends Component {
   static contextType = ProductContext
 
   render() {
-    var { loading, products } = this.context
+    var { loading, products, displayCart } = this.context
     return (
       <div id='container'>
         <Hero />
-        <Cart />
+        {displayCart ? <Cart /> : <></>}
         <div className='product-container'>
           {loading ? (
             <>
