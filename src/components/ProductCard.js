@@ -13,9 +13,9 @@ export default class ProductCard extends Component {
 
   static contextType = ProductContext
   handleAddToCart = () => {
-    var { increaseQuantity, openCart } = this.context
+    var { increaseQuantity, quickOpenCart } = this.context
     increaseQuantity(this.props.id)
-    openCart()
+    quickOpenCart()
   }
 
   render() {

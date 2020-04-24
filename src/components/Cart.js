@@ -8,10 +8,7 @@ export default class Cart extends Component {
   static contextType = ProductContext
   cancelCartTimeout = () => {
     var { cartTimeout } = this.context
-    console.log('cancelling cart timeout')
-    console.log(cartTimeout)
     if (cartTimeout) {
-      console.log('clearing')
       clearTimeout(cartTimeout)
     }
   }

@@ -36,7 +36,7 @@ class ProductProvider extends Component {
       this.setState({ displayCart: false })
     }
 
-    const openCart = () => {
+    const quickOpenCart = () => {
       this.setState({ displayCart: true })
       var cartTimeout = setTimeout(closeCart, 5000)
       this.setState({ cartTimeout })
@@ -50,7 +50,7 @@ class ProductProvider extends Component {
       cartTimeout: null,
       increaseQuantity,
       decreaseQuantity,
-      openCart,
+      quickOpenCart,
       handleCartClick,
     }
   }
