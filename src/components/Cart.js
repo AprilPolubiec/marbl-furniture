@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import { ProductContext } from '../providers/ProductProvider'
 
 import CartItem from './CartItem'
-
+// TODO: need to use local memory instead of state for cart
 export default class Cart extends Component {
   static contextType = ProductContext
   cancelCartTimeout = () => {
@@ -12,8 +13,9 @@ export default class Cart extends Component {
       clearTimeout(cartTimeout)
     }
   }
+
   render() {
-    var { products, cart, handleCartClick } = this.context
+    var { products, cart, handleCartClick, subtotal } = this.context
     return (
       <div id='cart' onMouseEnter={this.cancelCartTimeout}>
         <h3>Shopping Cart</h3>
@@ -33,12 +35,15 @@ export default class Cart extends Component {
             }
           })}
         </div>
+        <div id='subtotal'>
+          Subtotal: <div>${subtotal}</div>
+        </div>
         <button type='button' className='close-btn' onClick={handleCartClick}>
           x
         </button>
-        <button type='button' id='checkout-btn'>
+        <Link to='/checkout' id='checkout-btn'>
           Checkout
-        </button>
+        </Link>
       </div>
     )
   }
