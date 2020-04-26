@@ -1,3 +1,4 @@
+import {functions} from './firebase'
 export const isUSState = (state) => {
   let match = false
   const us_states = {
@@ -103,3 +104,5 @@ export const isCanadianProvince = (province) => {
 
   return match
 }
+
+export const createPaymentIntent = functions.httpsCallable('createPaymentIntent')

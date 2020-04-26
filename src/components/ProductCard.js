@@ -13,6 +13,7 @@ export default class ProductCard extends Component {
 
   static contextType = ProductContext
   handleAddToCart = () => {
+    //Update paymentintent
     var { increaseQuantity, quickOpenCart } = this.context
     increaseQuantity(this.props.id)
     quickOpenCart()
