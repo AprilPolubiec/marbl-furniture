@@ -7,14 +7,17 @@ import { CardElement, ElementsConsumer } from '@stripe/react-stripe-js'
 import CountryDropdown from './CountryDropdown'
 
 //Utils
-import { isUSState, isCanadianProvince } from '../utils'
+import { isUSState, isCanadianProvince, createPaymentIntent } from '../utils'
 import Swal from 'sweetalert2'
+
+import { ProductContext } from '../providers/ProductProvider'
 
 class BillingForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       name: '',
+      email: '',
       phone: '',
       line1: '',
       line2: '',
@@ -23,6 +26,7 @@ class BillingForm extends Component {
       country: 'US',
       errors: {
         name: '',
+        email: '',
         phone: '',
         line1: '',
         line2: '',
@@ -33,12 +37,18 @@ class BillingForm extends Component {
     }
   }
 
+  static contextType = ProductContext
+
   generateErrorMessages = (name, value) => {
     let errors = this.state.errors
     switch (name) {
       case 'name':
         let nameValid = value.length > 0
         errors[name] = nameValid ? '' : 'Name is required'
+        break
+      case 'email':
+        let emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+        errors.email = emailValid ? '' : 'Email is invalid'
         break
       case 'phone':
         let phoneValid = value.length > 0
@@ -106,14 +116,38 @@ class BillingForm extends Component {
     e.preventDefault()
     if (this.validForm()) {
       const { stripe, elements } = this.props
-
-      stripe
-        .createPaymentMethod({
-          type: 'card',
-          card: elements.getElement(CardElement),
+      var { subtotal } = this.context
+      createPaymentIntent(subtotal)
+        .then((paymentIntent) => {
+          var {
+            name,
+            phone,
+            email,
+            line1,
+            line2,
+            city,
+            state,
+            country,
+          } = this.state
+          stripe.confirmCardPayment(paymentIntent, {
+            payment_method: {
+              card: elements.getElement(CardElement),
+              billing_details: {
+                address: {
+                  city,
+                  country,
+                  line1,
+                  line2,
+                  state,
+                },
+                email,
+                name,
+                phone,
+              },
+            },
+          })
         })
         .then((result) => {
-          console.log(result)
           if (result.error) {
             Swal.fire({
               icon: 'error',
@@ -121,7 +155,14 @@ class BillingForm extends Component {
               text: result.error.message,
             })
           } else {
-            console.log(result.paymentMethod)
+            // The payment has been processed!
+            if (result.paymentIntent.status === 'succeeded') {
+              Swal.fire({
+                icon: 'success',
+                title: 'Done!',
+                text: 'Your order has been processed.',
+              })
+            }
           }
         })
     } else {
@@ -138,7 +179,7 @@ class BillingForm extends Component {
     const { stripe } = this.props
     return (
       <div id='billing-form'>
-        <h2>Shipping Address</h2>
+        <h2>Shipping Information</h2>
         <div className='form-field'>
           <label htmlFor='name'>
             Name:*{' '}
@@ -150,6 +191,20 @@ class BillingForm extends Component {
             name='name'
             type='text'
             value={this.state.name}
+            onChange={this.handleChange}
+          ></input>
+        </div>
+        <div className='form-field'>
+          <label htmlFor='email'>
+            Email:*{' '}
+            {errors.email.length > 0 && (
+              <span className='error'>{errors.email}</span>
+            )}
+          </label>
+          <input
+            name='email'
+            type='text'
+            value={this.state.email}
             onChange={this.handleChange}
           ></input>
         </div>
