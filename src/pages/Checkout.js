@@ -10,9 +10,7 @@ import { ProductContext } from '../providers/ProductProvider'
 
 export default class Checkout extends Component {
   static contextType = ProductContext
-  redirectHome = () => {
-    this.props.history.push('/')
-  }
+
   render() {
     var { cart, subtotal, shipping, products, loading } = this.context
     var cartEmpty = true
@@ -39,13 +37,13 @@ export default class Checkout extends Component {
                       />
                     )
                   } else {
-                    return <h3>Your shopping cart is empty :(</h3>
+                    return <></>
                   }
                 })}
               </>
             )}
             {cartEmpty ? (
-              <></>
+              <h3>Your shopping cart is empty :(</h3>
             ) : (
               <>
                 <div className='checkout-price'>
@@ -60,7 +58,7 @@ export default class Checkout extends Component {
               </>
             )}
 
-            <InjectedBillingForm handleSuccess={this.redirectHome} />
+            <InjectedBillingForm />
           </div>
         </div>
       </>

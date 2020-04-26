@@ -34,6 +34,12 @@ class ProductProvider extends Component {
       })
     }
 
+    const clearCart = () => {
+      this.setState({ cart: {}, subtotal: 0 }, () => {
+        localStorage.removeItem('cart')
+      })
+    }
+
     const handleCartClick = () => {
       this.setState({ displayCart: !this.state.displayCart })
     }
@@ -71,6 +77,7 @@ class ProductProvider extends Component {
       quickOpenCart,
       handleCartClick,
       calculateSubTotal,
+      clearCart,
     }
   }
 
