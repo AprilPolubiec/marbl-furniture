@@ -14,7 +14,8 @@ export default class Checkout extends Component {
     this.props.history.push('/')
   }
   render() {
-    var { cart, subtotal, products } = this.context
+    var { cart, subtotal, shipping, products, loading } = this.context
+    var cartEmpty = true
     return (
       <>
         <div id='container'>
@@ -22,23 +23,43 @@ export default class Checkout extends Component {
           <div className='checkout-container'>
             <h1>Checkout</h1>
             <h2>Shopping Cart</h2>
-            {Object.entries(cart).map(([id, quantity]) => {
-              if (quantity > 0) {
-                return (
-                  <CartItem
-                    key={id}
-                    quantity={quantity}
-                    product={products[id]}
-                    id={id}
-                  />
-                )
-              } else {
-                return <>Your shopping cart is empty :(</>
-              }
-            })}
-            <div id='subtotal'>
-              Subtotal: <div>${subtotal}</div>
-            </div>
+            {loading ? (
+              <></>
+            ) : (
+              <>
+                {Object.entries(cart).map(([id, quantity]) => {
+                  if (quantity > 0) {
+                    cartEmpty = false
+                    return (
+                      <CartItem
+                        key={id}
+                        quantity={quantity}
+                        product={products[id]}
+                        id={id}
+                      />
+                    )
+                  } else {
+                    return <h3>Your shopping cart is empty :(</h3>
+                  }
+                })}
+              </>
+            )}
+            {cartEmpty ? (
+              <></>
+            ) : (
+              <>
+                <div className='checkout-price'>
+                  Subtotal: <div>${subtotal}</div>
+                </div>
+                <div className='checkout-price'>
+                  Shipping: <div>${shipping}</div>
+                </div>
+                <div className='checkout-price total'>
+                  Total: <div>${subtotal + shipping}</div>
+                </div>
+              </>
+            )}
+
             <InjectedBillingForm handleSuccess={this.redirectHome} />
           </div>
         </div>

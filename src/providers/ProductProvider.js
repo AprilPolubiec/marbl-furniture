@@ -17,7 +17,7 @@ class ProductProvider extends Component {
       } else {
         cart[productId] = 1
       }
-      calculateSubTotal(cart)
+      calculateSubTotal()
       this.setState({ cart }, () => {
         localStorage.setItem('cart', JSON.stringify(this.state.cart))
       })
@@ -28,7 +28,7 @@ class ProductProvider extends Component {
       if (cart[productId] > 0) {
         cart[productId] -= 1
       }
-      calculateSubTotal(cart)
+      calculateSubTotal()
       this.setState({ cart }, () => {
         localStorage.setItem('cart', JSON.stringify(this.state.cart))
       })
@@ -48,7 +48,8 @@ class ProductProvider extends Component {
       this.setState({ cartTimeout })
     }
 
-    const calculateSubTotal = (cart) => {
+    const calculateSubTotal = () => {
+      var { cart } = this.state
       var subtotal = 0
       Object.entries(cart).forEach(([id, quantity]) => {
         var price = this.state.products[id].price
@@ -62,12 +63,14 @@ class ProductProvider extends Component {
       loading: true,
       cart: JSON.parse(localStorage.getItem('cart')) || {},
       subtotal: 0,
+      shipping: 7.95,
       displayCart: false,
       cartTimeout: null,
       increaseQuantity,
       decreaseQuantity,
       quickOpenCart,
       handleCartClick,
+      calculateSubTotal,
     }
   }
 
@@ -99,7 +102,9 @@ class ProductProvider extends Component {
           results.forEach((result) => {
             products[result.id] = result.product
           })
-          this.setState({ products, loading: false })
+          this.setState({ products, loading: false }, () => {
+            this.state.calculateSubTotal()
+          })
         })
       })
   }
