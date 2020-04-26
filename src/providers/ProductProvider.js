@@ -18,7 +18,9 @@ class ProductProvider extends Component {
         cart[productId] = 1
       }
       calculateSubTotal(cart)
-      this.setState({ cart })
+      this.setState({ cart }, () => {
+        localStorage.setItem('cart', JSON.stringify(this.state.cart))
+      })
     }
 
     const decreaseQuantity = (productId) => {
@@ -27,7 +29,9 @@ class ProductProvider extends Component {
         cart[productId] -= 1
       }
       calculateSubTotal(cart)
-      this.setState({ cart })
+      this.setState({ cart }, () => {
+        localStorage.setItem('cart', JSON.stringify(this.state.cart))
+      })
     }
 
     const handleCartClick = () => {
@@ -56,7 +60,7 @@ class ProductProvider extends Component {
     this.state = {
       products: {},
       loading: true,
-      cart: {},
+      cart: JSON.parse(localStorage.getItem('cart')) || {},
       subtotal: 0,
       displayCart: false,
       cartTimeout: null,
