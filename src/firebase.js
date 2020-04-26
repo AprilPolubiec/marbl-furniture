@@ -18,3 +18,9 @@ firebase.initializeApp(firebaseConfig)
 export const db = firebase.firestore()
 export const storage = firebase.storage();
 export const functions = firebase.functions();
+
+if (process.env.NODE_ENV === 'development') {
+  if (document.location.hostname === 'localhost') {
+    functions.useFunctionsEmulator('http://localhost:5001')
+  }
+}

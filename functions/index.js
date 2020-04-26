@@ -5,10 +5,10 @@ const stripe = require('stripe')(stripeKey)
 const admin = require('firebase-admin')
 admin.initializeApp()
 
-//TODO: won't work unless use is authorized
 exports.createPaymentIntent = functions.https.onCall(async (data, context) => {
-  var subtotal = data.subtotal
-  var shipping = 7.95
+  //Stripe amounts are in cents
+  var subtotal = data * 100
+  var shipping = 795
   const paymentIntent = await stripe.paymentIntents.create({
     amount: subtotal + shipping,
     currency: 'usd',
