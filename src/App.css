@@ -116,6 +116,10 @@ button a {
   text-align: center;
 }
 
+#checkout-btn:disabled {
+  cursor: not-allowed;
+}
+
 .product-card button.add-btn {
   top: 80px;
 }

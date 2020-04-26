@@ -10,7 +10,9 @@ import { ProductContext } from '../providers/ProductProvider'
 
 export default class Checkout extends Component {
   static contextType = ProductContext
-
+  redirectHome = () => {
+    this.props.history.push('/')
+  }
   render() {
     var { cart, subtotal, products } = this.context
     return (
@@ -37,7 +39,7 @@ export default class Checkout extends Component {
             <div id='subtotal'>
               Subtotal: <div>${subtotal}</div>
             </div>
-            <InjectedBillingForm />
+            <InjectedBillingForm handleSuccess={this.redirectHome} />
           </div>
         </div>
       </>

@@ -34,6 +34,7 @@ class BillingForm extends Component {
         state: '',
         country: '',
       },
+      loading: false,
     }
   }
 
@@ -114,11 +115,14 @@ class BillingForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    this.setState({ loading: true })
     if (this.validForm()) {
       const { stripe, elements } = this.props
       var { subtotal } = this.context
       createPaymentIntent(subtotal)
-        .then((paymentIntent) => {
+        .then((res) => {
+          var paymentIntent = res.data
+          // console.log(paymentIntent)
           var {
             name,
             phone,
@@ -129,7 +133,7 @@ class BillingForm extends Component {
             state,
             country,
           } = this.state
-          stripe.confirmCardPayment(paymentIntent, {
+          return stripe.confirmCardPayment(paymentIntent.client_secret, {
             payment_method: {
               card: elements.getElement(CardElement),
               billing_details: {
@@ -157,15 +161,19 @@ class BillingForm extends Component {
           } else {
             // The payment has been processed!
             if (result.paymentIntent.status === 'succeeded') {
+              this.setState({ loading: false })
               Swal.fire({
                 icon: 'success',
                 title: 'Done!',
                 text: 'Your order has been processed.',
+              }).then((result) => {
+                this.props.handleSuccess()
               })
             }
           }
         })
     } else {
+      this.setState({ loading: false })
       Swal.fire({
         icon: 'error',
         title: 'Oops!',
@@ -311,7 +319,7 @@ class BillingForm extends Component {
         <button
           id='checkout-btn'
           onClick={this.handleSubmit}
-          disabled={!stripe}
+          disabled={!stripe || this.state.loading}
         >
           Checkout
         </button>
