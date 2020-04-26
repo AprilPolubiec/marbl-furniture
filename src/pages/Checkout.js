@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 
+//Components
 import Nav from '../components/Nav'
 import CartItem from '../components/CartItem'
-import BillingForm from '../components/BillingForm'
-import ShippingForm from '../components/ShippingForm'
+import InjectedBillingForm from '../components/BillingForm'
 
-
+//Providers
 import { ProductContext } from '../providers/ProductProvider'
 
 export default class Checkout extends Component {
   static contextType = ProductContext
+
   render() {
     var { cart, subtotal, products } = this.context
     return (
@@ -36,9 +37,7 @@ export default class Checkout extends Component {
             <div id='subtotal'>
               Subtotal: <div>${subtotal}</div>
             </div>
-            <ShippingForm />
-            <BillingForm />
-            <button id='checkout-btn'>Checkout</button>
+            <InjectedBillingForm />
           </div>
         </div>
       </>
