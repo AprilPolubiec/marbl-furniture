@@ -240,15 +240,21 @@ button a {
   height: 74%;
 }
 
-#subtotal {
+.checkout-price {
   align-self: center;
   display: flex;
   width: 152px;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
-#subtotal div {
+.checkout-price div {
   font-weight: bold;
+}
+
+.checkout-price.total {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--light-green);
 }
 
 /* CHECKOUT */
@@ -259,6 +265,12 @@ button a {
   align-items: center;
   padding: 2rem 0;
   position: relative;
+}
+
+.checkout-container h3 {
+  opacity: 30%;
+  padding: 50px;
+  font-family: var(--header-font);
 }
 
 #billing-form,

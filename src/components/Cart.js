@@ -15,27 +15,33 @@ export default class Cart extends Component {
   }
 
   render() {
-    var { products, cart, handleCartClick, subtotal } = this.context
+    var { products, cart, handleCartClick, subtotal, loading } = this.context
     return (
       <div id='cart' onMouseEnter={this.cancelCartTimeout}>
         <h3>Shopping Cart</h3>
         <div id='items-container'>
-          {Object.entries(cart).map(([id, quantity]) => {
-            if (quantity > 0) {
-              return (
-                <CartItem
-                  key={id}
-                  quantity={quantity}
-                  product={products[id]}
-                  id={id}
-                />
-              )
-            } else {
-              return <></>
-            }
-          })}
+          {loading ? (
+            <></>
+          ) : (
+            <>
+              {Object.entries(cart).map(([id, quantity]) => {
+                if (quantity > 0) {
+                  return (
+                    <CartItem
+                      key={id}
+                      quantity={quantity}
+                      product={products[id]}
+                      id={id}
+                    />
+                  )
+                } else {
+                  return <></>
+                }
+              })}
+            </>
+          )}
         </div>
-        <div id='subtotal'>
+        <div className='checkout-price'>
           Subtotal: <div>${subtotal}</div>
         </div>
         <button type='button' className='close-btn' onClick={handleCartClick}>
