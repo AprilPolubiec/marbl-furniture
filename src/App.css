@@ -36,7 +36,7 @@ button a {
 
 #container {
   background-color: var(--off-white);
-  height: 100vh;
+  height: 100%;
 }
 
 /* BANNER & NAV */
